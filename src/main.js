@@ -1,7 +1,6 @@
 'use strict';
 var electron = require('electron');
-var request = require('request');
-var notifier = require('node-notifier');
+var atmService = require('./atmService');
 
 var app = electron.app;  // Module to control application life.
 var Menu = electron.Menu;
@@ -21,29 +20,22 @@ app.on('window-all-closed', function () {
 });
 
 app.on('ready', function () {
-    var tray;
-    var transformStatusFlagToStatusText = function (isOccupied) {
-        return isOccupied ? 'occupied' : 'vacant';
-    };
-
-    var currentStatus = transformStatusFlagToStatusText(false);
+    var tray, currentStatus;
 
     var pollData = function () {
-        request('http://52.62.29.150:8080/ts/1', function (error, response, body) {
-            if (!error && response.statusCode === 200) {
-                var status = transformStatusFlagToStatusText(JSON.parse(body).occupied);
-
-                if (currentStatus !== status) {
-                    currentStatus = status;
-                    updateMenuByStatus(status);
-                }
-            } else {
+        atmService.getStatus(1, function (error, status) {
+            if (error) {
                 console.error('There is something fishy here......');
+            }
+
+            if (currentStatus !== status) {
+                currentStatus = status;
+                updateMenuByStatus(status);
             }
         });
     };
 
-    var getImageByStatus = function(status) {
+    var getImageByStatus = function (status) {
         return __dirname + '/' + status + '.png';
     };
 
@@ -69,9 +61,21 @@ app.on('ready', function () {
         ]));
     };
 
-    tray = new Tray(getImageByStatus(currentStatus));
-    tray.setToolTip('Aconex Toilet Monitor');
+    var init = function() {
+        atmService.getStatus(1, function (error, status) {
+            if (error) {
+                console.error('There is something fishy here......');
+            }
 
-    updateMenuByStatus(currentStatus);
-    setInterval(pollData, 1000);
+            currentStatus = status;
+
+            tray = new Tray(getImageByStatus(currentStatus));
+            tray.setToolTip('Aconex Toilet Monitor');
+
+            updateMenuByStatus(currentStatus);
+            setInterval(pollData, 1000);
+        });
+    };
+
+    init();
 });
