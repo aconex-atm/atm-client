@@ -53,7 +53,7 @@ app.on('ready', function () {
     };
 
     var getImageByStatus = function(status) {
-        return 'src/' + status + '.png';
+        return __dirname + '/' + status + '.png';
     };
 
     var updateMenuByStatus = function (status) {

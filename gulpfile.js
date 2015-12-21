@@ -7,7 +7,7 @@ gulp.task('clean', function () {
     return del.sync('dist', {force: true})
 });
 
-gulp.task('package-mac', ['clean'], function() {
+gulp.task('package', ['clean'], function(done) {
     packager({
         dir: '.',
         name: 'AconexToiletMonitor',
@@ -15,7 +15,8 @@ gulp.task('package-mac', ['clean'], function() {
         out: 'dist',
         all: true
     }, function done (err, appPath) {
+        done();
     });
 });
 
-gulp.task('build', ['package-mac']);
+gulp.task('build', ['package']);
