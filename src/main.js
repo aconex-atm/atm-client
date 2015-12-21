@@ -28,14 +28,6 @@ app.on('ready', function () {
 
     var currentStatus = transformStatusFlagToStatusText(false);
 
-    var notifyStatus = function(status) {
-        notifier.notify({
-            title: 'Aconex Toilet Monitor',
-            message: 'Toilet is ' + status,
-            time: 1000
-        });
-    };
-
     var pollData = function () {
         request('http://52.62.29.150:8080/ts/1', function (error, response, body) {
             if (!error && response.statusCode === 200) {
@@ -43,7 +35,6 @@ app.on('ready', function () {
 
                 if (currentStatus !== status) {
                     currentStatus = status;
-                    notifyStatus(status);
                     updateMenuByStatus(status);
                 }
             } else {
