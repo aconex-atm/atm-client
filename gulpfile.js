@@ -14,7 +14,7 @@ gulp.task('package', ['clean'], function(done) {
         version: '0.36.1',
         out: 'dist',
         all: true
-    }, function done (err, appPath) {
+    }, function (err, appPath) {
         done();
     });
 });
