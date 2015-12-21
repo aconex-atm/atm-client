@@ -21,8 +21,7 @@ app.on('window-all-closed', function () {
 });
 
 app.on('ready', function () {
-    var tray = new Tray('./vacant.png');
-
+    var tray;
     var transformStatusFlagToStatusText = function (isOccupied) {
         return isOccupied ? 'occupied' : 'vacant';
     };
@@ -53,8 +52,12 @@ app.on('ready', function () {
         });
     };
 
+    var getImageByStatus = function(status) {
+        return 'src/' + status + '.png';
+    };
+
     var updateMenuByStatus = function (status) {
-        tray.setImage(status + '.png');
+        tray.setImage(getImageByStatus(status));
         tray.setContextMenu(Menu.buildFromTemplate([
             {
                 label: 'Aconex Toilet Monitor',
@@ -62,6 +65,9 @@ app.on('ready', function () {
             },
             {
                 label: 'Status:       ' + status
+            },
+            {
+                type: 'separator'
             },
             {
                 label: 'Quit',
@@ -72,6 +78,7 @@ app.on('ready', function () {
         ]));
     };
 
+    tray = new Tray(getImageByStatus(currentStatus));
     tray.setToolTip('Aconex Toilet Monitor');
 
     updateMenuByStatus(currentStatus);
