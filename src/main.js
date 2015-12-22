@@ -22,19 +22,6 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
     var tray, currentStatus;
 
-    var pollData = function () {
-        atmService.getStatus(1, function (error, status) {
-            if (error) {
-                console.error('There is something fishy here......');
-            }
-
-            if (currentStatus !== status) {
-                currentStatus = status;
-                updateMenuByStatus(status);
-            }
-        });
-    };
-
     var getImageByStatus = function (status) {
         return __dirname + '/' + status + '.png';
     };
@@ -61,8 +48,22 @@ app.on('ready', function () {
         ]));
     };
 
+    var subscribe = function(id) {
+        atmService.subscribe(id, function(error, status) {
+            if (error) {
+                console.log("something fishy here...");
+            }
+
+            if (currentStatus !== status) {
+                currentStatus = status;
+                updateMenuByStatus(status);
+            }
+        });
+    };
+
     var init = function() {
-        atmService.getStatus(1, function (error, status) {
+        var id = 1;
+        atmService.getStatus(id, function (error, status) {
             if (error) {
                 console.error('There is something fishy here......');
             }
@@ -73,7 +74,8 @@ app.on('ready', function () {
             tray.setToolTip('Aconex Toilet Monitor');
 
             updateMenuByStatus(currentStatus);
-            setInterval(pollData, 1000);
+
+            subscribe(id);
         });
     };
 

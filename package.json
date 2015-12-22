@@ -8,12 +8,12 @@
   },
   "author": "Aconex",
   "devDependencies": {
-    "asar": "^0.8.3",
     "del": "^2.2.0",
     "electron-packager": "^5.2.0",
     "electron-prebuilt": "^0.36.0",
     "gulp": "^3.9.0",
     "node-notifier": "^4.4.0",
-    "request": "^2.67.0"
+    "request": "^2.67.0",
+    "ws": "^0.8.1"
   }
 }
