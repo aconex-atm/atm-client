@@ -63,20 +63,10 @@ app.on('ready', function () {
 
     var init = function() {
         var id = 1;
-        atmService.getStatus(id, function (error, status) {
-            if (error) {
-                console.error('There is something fishy here......');
-            }
+        tray = new Tray(__dirname + '/icons/toilet-32x32.png');
+        tray.setToolTip('Aconex Toilet Monitor');
 
-            currentStatus = status;
-
-            tray = new Tray(getImageByStatus(currentStatus));
-            tray.setToolTip('Aconex Toilet Monitor');
-
-            updateMenuByStatus(currentStatus);
-
-            subscribe(id);
-        });
+        subscribe(id);
     };
 
     init();

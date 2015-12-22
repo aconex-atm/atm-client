@@ -25,10 +25,8 @@ var atmService = {
                 console.log('Connected!');
             });
 
-            ws.on('message', function(data, flags) {
-                if (!JSON.parse(data).hasOwnProperty('message')) {
-                    cb(null, transformDataToStatusText(data));
-                }
+            ws.on('message', function(data) {
+                cb(null, transformDataToStatusText(data));
             });
 
             ws.on('close', function() {
