@@ -19,9 +19,8 @@ var atmService = {
     },
 
     subscribe: function(id, cb) {
-        var ws = new WebSocket('ws://' + baseUrl + '/' + id + '/subscribe');
-
-        setTimeout(function() {
+        var connect = function() {
+            var ws = new WebSocket('ws://' + baseUrl + '/' + id + '/subscribe');
             ws.on('open', function() {
                 console.log('Connected!');
             });
@@ -32,7 +31,13 @@ var atmService = {
                 }
             });
 
-        }, 500);
+            ws.on('close', function() {
+                console.log('socket close');
+                setTimeout(connect, 10000);
+            });
+        };
+
+        setTimeout(connect, 500);
     }
 };
 
