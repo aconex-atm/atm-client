@@ -48,8 +48,8 @@ app.on('ready', function () {
         ]));
     };
 
-    var subscribe = function(id) {
-        atmService.subscribe(id, function(error, status) {
+    var subscribe = function(level, gender, slotId) {
+        atmService.subscribe(level, gender, slotId, function(error, status) {
             if (error) {
                 console.log("something fishy here...");
             }
@@ -62,11 +62,10 @@ app.on('ready', function () {
     };
 
     var init = function() {
-        var id = 1;
         tray = new Tray(__dirname + '/icons/toilet-32x32.png');
         tray.setToolTip('Aconex Toilet Monitor');
 
-        subscribe(id);
+        subscribe(4, "male", 1);
     };
 
     init();

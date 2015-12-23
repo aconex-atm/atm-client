@@ -1,35 +1,24 @@
-var request = require('request');
 var WebSocket = require('ws');
 
-var baseUrl = "52.62.29.150:8080/ts";
+var baseUrl = "ws://52.62.29.150:8080";
 
 var transformDataToStatusText = function (data) {
     return JSON.parse(data).occupied ? 'occupied' : 'vacant';
 };
 
 var atmService = {
-    getStatus: function(id, cb) {
-        request('http://' + baseUrl + "/" + id, function (error, response, data) {
-            if (error || response.statusCode !== 200) {
-                cb(error, null);
-            }
-
-            cb(null, transformDataToStatusText(data));
-        })
-    },
-
-    subscribe: function(id, cb) {
-        var connect = function() {
-            var ws = new WebSocket('ws://' + baseUrl + '/' + id + '/subscribe');
-            ws.on('open', function() {
+    subscribe: function (level, gender, slotId, cb) {
+        var connect = function () {
+            var ws = new WebSocket(baseUrl + '/level/' + level + '/room/' + gender + '/slot/' + slotId + '/subscribe');
+            ws.on('open', function () {
                 console.log('Connected!');
             });
 
-            ws.on('message', function(data) {
+            ws.on('message', function (data) {
                 cb(null, transformDataToStatusText(data));
             });
 
-            ws.on('close', function() {
+            ws.on('close', function () {
                 console.log('socket close');
                 setTimeout(connect, 10000);
             });
